@@ -7,14 +7,14 @@ public class JuegoPrincipal {
     private int posFilaBomba;
     private int posColumnaBomba;
 
-    private boolean esMiTurno;
+    private boolean turnoPropio;
     private boolean partidaFinalizada;
 
     public JuegoPrincipal(int filas, int columnas) {
         tableroDeJuego = new Tablero(filas, columnas);
         bombaColocada = false;
         partidaFinalizada = false;
-        esMiTurno = false;
+        turnoPropio = false;
     }
 
     public boolean seleccionarUbicacionBomba(int fila, int columna) {
@@ -33,23 +33,23 @@ public class JuegoPrincipal {
 
     public String procesarJugada(int fila, int columna) {
 
-        if (!esMiTurno) {
-            return "Aún no puedes jugar, espera tu turno.";
+        if (!turnoPropio) {
+            return "Aún no puedes jugar, esperemenos tu turno.";
         }
 
         if (partidaFinalizada) {
-            return "La partida ya terminó.";
+            return "La partida ya se acabó!";
         }
 
         if (tableroDeJuego.obtenerCasilla(fila,columna).estaUsada()) {
-            return "Esa posición ya fue seleccionada anteriormente.";
+            return "Esa posición ya fue seleccionada anteriormente,";
         }
 
         tableroDeJuego.marcarUsada(fila, columna);
 
         if (tableroDeJuego.obtenerCasilla(fila, columna).tieneBomba()) {
             partidaFinalizada = true;
-            return "💥 ¡Has detonado la bomba del rival!";
+            return " ¡Has detonado la bomba del rival!";
         }
 
         cambiarTurno();
@@ -57,11 +57,11 @@ public class JuegoPrincipal {
     }
 
     public void cambiarTurno() {
-        esMiTurno = !esMiTurno;
+        turnoPropio = !turnoPropio;
     }
 
     public void asignarTurnoInicial(boolean miTurno) {
-        this.esMiTurno = miTurno;
+        this.turnoPropio = miTurno;
     }
 
     public boolean partidaTerminada() {
