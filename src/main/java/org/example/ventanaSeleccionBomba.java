@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.excepciones.BombayaExistenteException;
+
 import javax.swing.*;
 import java.awt.Color;
 
@@ -183,23 +185,25 @@ public class ventanaSeleccionBomba extends JFrame {
     }
 
     private void seleccionarPosicion(int f, int c) {
-        boolean resultado = partidaActual.seleccionarUbicacionBomba(f, c);
+        try {
+            partidaActual.seleccionarUbicacionBomba(f, c);
 
-        if (resultado) {
             tablero[f][c].setBackground(new Color(220, 20, 60));
+
             tablero[f][c].setHorizontalAlignment(SwingConstants.CENTER);
 
-            System.out.println("TNT puesta: " + f + "," + c);
+            System.out.println("Bomba puesta: " + (f+1) + "," + (c+1));
 
             JOptionPane.showMessageDialog(this,
-                    "TNT colocada en la posisicion " + (f+1) + "," + (c+1),
+                    "Tu bomba esta en la posicion " + (f+1) + "," + (c+1),
                     "Listo",
                     JOptionPane.INFORMATION_MESSAGE);
 
-        } else {
+        } catch (BombayaExistenteException e) {
+            System.err.println("Error: " + e.getMessage());
             JOptionPane.showMessageDialog(this,
-                    "Ya pusiste una tnt!, esperemos a tu rival",
-                    "Error",
+                    e.getMessage(),
+                    "Error - Tnt ya colocada",
                     JOptionPane.ERROR_MESSAGE);
         }
     }

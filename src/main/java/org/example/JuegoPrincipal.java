@@ -1,5 +1,9 @@
 package org.example;
 
+import org.example.excepciones.BombayaExistenteException;
+import org.example.excepciones.CasillaIsAtacadaException;
+import org.example.excepciones.TurnoNoHabilitado;
+
 public class JuegoPrincipal {
 
     private Tablero tableroDeJuego;
@@ -7,19 +11,24 @@ public class JuegoPrincipal {
     private int posFilaBomba;
     private int posColumnaBomba;
 
-    private boolean turnoPropio;
+    private boolean esMiTurno;
     private boolean partidaFinalizada;
 
     public JuegoPrincipal(int filas, int columnas) {
         tableroDeJuego = new Tablero(filas, columnas);
         bombaColocada = false;
         partidaFinalizada = false;
-        turnoPropio = false;
+        esMiTurno = false;
     }
 
-    public boolean seleccionarUbicacionBomba(int fila, int columna) {
-        if (bombaColocada || partidaFinalizada) {
+    public boolean seleccionarUbicacionBomba(int fila, int columna) throws BombayaExistenteException {
+
+        if (partidaFinalizada) {
             return false;
+        }
+
+        if (bombaColocada) {
+            throw new BombayaExistenteException(posFilaBomba, posColumnaBomba);
         }
 
         posFilaBomba = fila;
@@ -31,25 +40,25 @@ public class JuegoPrincipal {
         return true;
     }
 
-    public String procesarJugada(int fila, int columna) {
+    public String procesarJugada(int fila, int columna) throws TurnoNoHabilitado, CasillaIsAtacadaException {
 
-        if (!turnoPropio) {
-            return "Aún no puedes jugar, esperemenos tu turno.";
+        if (!esMiTurno) {
+            throw new TurnoNoHabilitado("Jugador");
         }
 
         if (partidaFinalizada) {
-            return "La partida ya se acabó!";
+            return "La partida ya termino.";
         }
 
         if (tableroDeJuego.obtenerCasilla(fila,columna).estaUsada()) {
-            return "Esa posición ya fue seleccionada anteriormente,";
+            throw new CasillaIsAtacadaException(fila, columna);
         }
 
         tableroDeJuego.marcarUsada(fila, columna);
 
         if (tableroDeJuego.obtenerCasilla(fila, columna).tieneBomba()) {
             partidaFinalizada = true;
-            return " ¡Has detonado la bomba del rival!";
+            return "Has detonado la tnt del rival!";
         }
 
         cambiarTurno();
@@ -57,11 +66,11 @@ public class JuegoPrincipal {
     }
 
     public void cambiarTurno() {
-        turnoPropio = !turnoPropio;
+        esMiTurno = !esMiTurno;
     }
 
     public void asignarTurnoInicial(boolean miTurno) {
-        this.turnoPropio = miTurno;
+        this.esMiTurno = miTurno;
     }
 
     public boolean partidaTerminada() {
@@ -71,5 +80,8 @@ public class JuegoPrincipal {
     public boolean yaPusoBomba() {
         return bombaColocada;
     }
-}
 
+    public int[] getPosicionBomba() {
+        return new int[]{posFilaBomba, posColumnaBomba};
+    }
+}
