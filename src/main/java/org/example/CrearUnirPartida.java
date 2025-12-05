@@ -4,6 +4,7 @@ package org.example;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.*;
 
 public class CrearUnirPartida extends javax.swing.JFrame {
     
@@ -66,10 +67,26 @@ public class CrearUnirPartida extends javax.swing.JFrame {
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
          reproducirSonido("/sonido/select.wav");
+
+        JOptionPane.showMessageDialog(this,
+                "Creando servidor...\nEsperando rival",
+                "Servidor waiting",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        ventanaSeleccionBomba ventana = new ventanaSeleccionBomba();
+        ventana.setVisible(true);
+        this.dispose();
     }
 
     private void btnUnirseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnirseActionPerformed
           reproducirSonido("/sonido/select.wav");
+        String ip = JOptionPane.showInputDialog(this,
+                "IP del servidor:");
+        if (ip != null && !ip.trim().isEmpty()) {
+            ventanaSeleccionBomba ventana = new ventanaSeleccionBomba(ip);
+            ventana.setVisible(true);
+            this.dispose();
+        }
     }
 
 
