@@ -50,7 +50,7 @@ public class ventanaSeleccionBomba extends JFrame {
 
     public void iniciarJuego() {
         juegoIniciado = true;
-        setTitle("Encuentra la TNT del rival!");
+        setTitle("Esquiva la TNT del rival!");
 
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(this,
@@ -255,36 +255,45 @@ public class ventanaSeleccionBomba extends JFrame {
         }
         else if (juegoIniciado) {
             atacarCasilla(f, c);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Esperando a que el rival coloque su TNT...",
+                    "Espera",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     private void atacarCasilla(int f, int c) {
-        int[] tntRival;
-        if (soyServidor) {
-            tntRival = ((JugadorSystem) jugador).getTNTRival();
-        } else {
-            tntRival = ((JugadorConectado) jugador).getTNTRival();
-        }
-
-        if (f == tntRival[0] && c == tntRival[1]) {
-            tablero[f][c].setIcon(new ImageIcon(getClass().getResource("/imagenes/tnticon.jpg")));
-            reproducirSonido("/sonido/boom.wav");
+        try {
+            int[] tntRival;
             if (soyServidor) {
-                ((JugadorSystem) jugador).enviarPerdi();
+                tntRival = ((JugadorSystem) jugador).getTNTRival();
             } else {
-                ((JugadorConectado) jugador).enviarPerdi();
+                tntRival = ((JugadorConectado) jugador).getTNTRival();
             }
 
-            JOptionPane.showMessageDialog(this,
-                    "Tocaste la bomba del rival!\nPERDISTE!",
-                    "GAME OVER",
-                    JOptionPane.PLAIN_MESSAGE,new ImageIcon(getClass().getResource("/imagenes/explosionGif.gif"))
-            );
-            this.dispose();
-        } else {
-            tablero[f][c].setIcon(new ImageIcon(getClass().getResource("/imagenes/diamondicon.jpg")));
-            reproducirSonido("/sonido/breaking.wav");
-            System.out.println("casilla segura");
+            if (f == tntRival[0] && c == tntRival[1]) {
+                tablero[f][c].setIcon(new ImageIcon(getClass().getResource("/imagenes/tnticon.jpg")));
+                reproducirSonido("/sonido/boom.wav");
+                if (soyServidor) {
+                    ((JugadorSystem) jugador).enviarPerdi();
+                } else {
+                    ((JugadorConectado) jugador).enviarPerdi();
+                }
+
+                JOptionPane.showMessageDialog(this,
+                        "Tocaste la tnt del rival!\nPERDISTE!",
+                        "GAME OVER",
+                        JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/imagenes/explosionGif.gif"))
+                );
+                this.dispose();
+            } else {
+                tablero[f][c].setIcon(new ImageIcon(getClass().getResource("/imagenes/diamondicon.jpg")));
+                reproducirSonido("/sonido/breaking.wav");
+                System.out.println("casilla segura");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al atacar casilla: " + e.getMessage());
         }
     }
 

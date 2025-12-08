@@ -34,7 +34,7 @@ public void reproducirSonido(String ruta) {
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-
+        jLabel6=new javax.swing.JLabel();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
@@ -70,10 +70,15 @@ public void reproducirSonido(String ruta) {
         jLabel1.setBounds(0, 270, 600, 330);
         getContentPane().add(jLabel1);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/TRES-EN-CREEPER-23-11-2025 (1).gif")));
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tntIcon.gif")));
+        jLabel6.setBounds(390, 120, 180, 140);
+        getContentPane().add(jLabel6);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tituloInicial.png")));
         jLabel3.setBounds(0, 0, 610, 270);
         getContentPane().add(jLabel3);
         pack();
+
     }
 
     private void BtnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnJugarActionPerformed
@@ -104,5 +109,6 @@ public void reproducirSonido(String ruta) {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
 
 }

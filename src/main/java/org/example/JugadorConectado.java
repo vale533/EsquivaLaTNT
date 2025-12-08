@@ -65,7 +65,7 @@ public class JugadorConectado extends Jugador implements ComunicacionJugador {
                 ventana.iniciarJuego();
             }
         } else if (msg.equals("PERDI")) {
-            System.out.println("rival perdio, yo gane!");
+            System.out.println("El rival tocó tu tnt! GANASTEE");
             if (ventana != null) {
                 ventana.mostrarGanaste();
             }

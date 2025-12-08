@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.excepciones.BombayaExistenteException;
 import org.example.excepciones.CasillaIsAtacadaException;
-import org.example.excepciones.TurnoNoHabilitado;
+import org.example.excepciones.PartidaNoIniciadaException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,15 +13,14 @@ public class JuegoPrincipal {
     private boolean bombaColocada;
     private int posFilaBomba;
     private int posColumnaBomba;
-
-    private boolean esMiTurno;
+    private boolean juegoIniciado;
     private boolean partidaFinalizada;
 
     public JuegoPrincipal(int filas, int columnas) {
         tableroDeJuego = new Tablero(filas, columnas);
         bombaColocada = false;
         partidaFinalizada = false;
-        esMiTurno = false;
+        juegoIniciado = false;
     }
 
     public boolean seleccionarUbicacionBomba(int fila, int columna) throws BombayaExistenteException {
@@ -43,10 +42,10 @@ public class JuegoPrincipal {
         return true;
     }
 
-    public String procesarJugada(int fila, int columna) throws TurnoNoHabilitado, CasillaIsAtacadaException {
+    public String procesarJugada(int fila, int columna) throws PartidaNoIniciadaException, CasillaIsAtacadaException {
 
-        if (!esMiTurno) {
-            throw new TurnoNoHabilitado("Jugador");
+        if (!juegoIniciado) {
+            throw new PartidaNoIniciadaException("Ambos jugadores deben colocar sus TNT primero");
         }
 
         if (partidaFinalizada) {
@@ -64,16 +63,17 @@ public class JuegoPrincipal {
             return "Has detonado la tnt del rival!";
         }
 
-        cambiarTurno();
-        return "Casilla segura, turno cambiado.";
+        return "Casilla segura.";
     }
 
-    public void cambiarTurno() {
-        esMiTurno = !esMiTurno;
+    public void iniciarJuego() {
+        if (bombaColocada) {
+            juegoIniciado = true;
+        }
     }
 
-    public void asignarTurnoInicial(boolean miTurno) {
-        this.esMiTurno = miTurno;
+    public boolean juegoEstaIniciado() {
+        return juegoIniciado;
     }
 
     public boolean partidaTerminada() {
@@ -92,5 +92,8 @@ public class JuegoPrincipal {
                 .filter(c -> !c.tieneBomba())
                 .map(c -> new int[]{c.fila, c.columna})
                 .collect(Collectors.toList());
+    }
+    public Tablero getTablero() {
+        return tableroDeJuego;
     }
 }
